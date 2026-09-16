@@ -1,4 +1,4 @@
-# GMG_ALEJO
+# GMG_ALEJO7
 
 Responsive gaming and streamer landing page built with HTML, CSS and JavaScript.
 
