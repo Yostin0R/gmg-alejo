@@ -1,0 +1,16 @@
+const player=document.querySelector('#video-player');
+function clearPlayer(){player.replaceChildren();dialog.classList.remove('has-video')}
+dialog.addEventListener('close',clearPlayer);
+document.addEventListener('click',e=>{
+ const game=e.target.closest('[data-game]');if(game){renderVideos(game.dataset.game);document.querySelector('#videos').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'})}
+ const video=e.target.closest('[data-video]');if(video){
+  const item=videos.find(v=>v.id===video.dataset.video);if(!item)return;clearPlayer();const source=videoSource(item);
+  showDialog(item.title,source?'':(item.sample?'This is a sample highlight. The official video is coming soon.':'Video unavailable.'),games.find(g=>g.id===item.game)?.title.toUpperCase()||'VIDEO');
+  if(source?.type==='youtube'){const frame=document.createElement('iframe');frame.src=source.url;frame.title=item.title;frame.allow='encrypted-media; picture-in-picture; fullscreen';frame.allowFullscreen=true;frame.referrerPolicy='strict-origin-when-cross-origin';player.append(frame);dialog.classList.add('has-video')}
+  if(source?.type==='file'){const media=document.createElement('video');media.controls=true;media.playsInline=true;media.preload='metadata';media.src=source.url;media.poster=safeUrl(item.image,{local:true});media.addEventListener('error',()=>{document.querySelector('#dialog-description').textContent='The video could not be loaded. Please try again later.'});player.append(media);dialog.classList.add('has-video')}
+  if(source?.type==='external'){const link=document.createElement('a');link.href=source.url;link.target='_blank';link.rel='noopener noreferrer';link.className='button primary';link.textContent='WATCH ON PLATFORM ↗';player.append(link)}
+ }
+ const social=e.target.closest('[data-social]');if(social){const url=safeUrl(socials.find(s=>s.platform===social.dataset.social)?.url);if(url){window.open(url,'_blank','noopener,noreferrer')}else{clearPlayer();showDialog('GMG_ALEJO7 ON '+social.dataset.social.toUpperCase(),'The official profile link is coming soon.','JOIN THE COMMUNITY')}}
+ if(e.target.closest('.dialog-close,.dialog-dismiss'))dialog.close();
+});
+dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});

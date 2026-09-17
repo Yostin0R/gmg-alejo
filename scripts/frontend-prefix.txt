@@ -1,0 +1,22 @@
+'use strict';
+const {escape:esc,safeUrl,videoSource,validate}=ContentUtils;
+let games=[],videos=[],socials=[];
+function renderVideos(filter){
+ const shown=filter?videos.filter(v=>v.game===filter):videos;
+ document.querySelector('#video-grid').innerHTML=shown.map(v=>`<article class="video-card"><button class="thumbnail" data-video="${esc(v.id)}" aria-label="Watch ${esc(v.title)}"><img src="${esc(safeUrl(v.image,{local:true}))}" alt="${esc(v.title)}" loading="lazy"><span class="play">▷</span>${v.duration?`<span class="duration">${esc(v.duration)}</span>`:''}</button><div class="video-info"><span class="category">${esc(games.find(g=>g.id===v.game)?.title.toUpperCase()||'')}${v.sample?' · SAMPLE':''}</span><h3>${esc(v.title)}</h3><div class="video-meta"><span>${v.views?'◉ '+esc(v.views)+' views':''}</span><time datetime="${esc(v.date)}">${esc(v.date)}</time></div></div></article>`).join('');
+ document.querySelector('#empty-state').hidden=shown.length>0;
+ document.querySelector('#filter-label').textContent=filter?(games.find(g=>g.id===filter)?.title.toUpperCase()||'GAME')+' CONTENT':'FEATURED MOMENTS';
+ document.querySelector('#sample-label').hidden=!shown.some(v=>v.sample);
+}
+async function loadContent(){
+ const status=document.querySelector('#content-status');
+ try{
+  const response=await fetch('content/site.json',{cache:'no-cache'});if(!response.ok)throw Error('Content unavailable');
+  const content=validate(await response.json());({games,videos,socials}=content);
+  document.querySelector('#game-grid').innerHTML=games.map(g=>`<article class="game-card"><img src="${esc(safeUrl(g.image,{local:true}))}" alt="${esc(g.title)} game artwork" loading="lazy"><div class="game-info"><small>${esc(g.category)}</small><h3>${esc(g.title.toUpperCase())}</h3><button data-game="${esc(g.id)}">View Content <span>↗</span></button></div></article>`).join('');
+  document.querySelector('.hero-art').style.backgroundImage='url('+JSON.stringify(safeUrl(content.heroImage,{local:true}))+')';
+  document.querySelector('.profile-visual>img').src=safeUrl(content.profileImage,{local:true});
+  renderVideos();status.textContent=games.length?'':'New games are coming soon.';status.hidden=games.length>0;
+ }catch(error){status.hidden=false;status.replaceChildren(document.createTextNode('Content could not be loaded. '));const retry=document.createElement('button');retry.textContent='Try again';retry.className='text-link';retry.addEventListener('click',loadContent);status.append(retry);document.querySelector('#sample-label').hidden=true;console.error(error.message)}
+}
+loadContent();

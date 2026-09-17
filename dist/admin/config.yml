@@ -1,0 +1,228 @@
+{
+  "backend": {
+    "name": "github",
+    "repo": "Yostin0R/gmg-alejo",
+    "branch": "main",
+    "base_url": "https://api.netlify.com",
+    "auth_endpoint": "auth"
+  },
+  "locale": "es",
+  "media_folder": "dist/assets/uploads",
+  "public_folder": "/assets/uploads",
+  "display_url": "/",
+  "logo_url": "/assets/hero.png",
+  "editor": {
+    "preview": false
+  },
+  "collections": [
+    {
+      "name": "website",
+      "label": "GMG_ALEJO7",
+      "files": [
+        {
+          "name": "content",
+          "label": "Imágenes, juegos y videos",
+          "file": "dist/content/site.json",
+          "format": "json",
+          "fields": [
+            {
+              "name": "heroImage",
+              "label": "Imagen de portada",
+              "widget": "image",
+              "media_library": {
+                "config": {
+                  "max_file_size": 5242880
+                }
+              }
+            },
+            {
+              "name": "profileImage",
+              "label": "Imagen de perfil",
+              "widget": "image",
+              "media_library": {
+                "config": {
+                  "max_file_size": 5242880
+                }
+              }
+            },
+            {
+              "name": "games",
+              "label": "Juegos",
+              "label_singular": "Juego",
+              "widget": "list",
+              "collapsed": true,
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "Identificador",
+                  "widget": "string",
+                  "hint": "Único, sin espacios. No lo cambies si ya tiene videos asociados.",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "Usa minúsculas, números y guiones."
+                  ]
+                },
+                {
+                  "name": "title",
+                  "label": "Nombre",
+                  "widget": "string"
+                },
+                {
+                  "name": "category",
+                  "label": "Categoría",
+                  "widget": "string"
+                },
+                {
+                  "name": "image",
+                  "label": "Imagen",
+                  "widget": "image",
+                  "media_library": {
+                    "config": {
+                      "max_file_size": 5242880
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "name": "videos",
+              "label": "Videos",
+              "label_singular": "Video",
+              "widget": "list",
+              "collapsed": true,
+              "summary": "{{fields.title}}",
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "Identificador único",
+                  "widget": "string",
+                  "pattern": [
+                    "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                    "Usa minúsculas, números y guiones."
+                  ]
+                },
+                {
+                  "name": "title",
+                  "label": "Título",
+                  "widget": "string"
+                },
+                {
+                  "name": "game",
+                  "label": "Juego",
+                  "widget": "relation",
+                  "collection": "website",
+                  "file": "content",
+                  "search_fields": [
+                    "games.*.title"
+                  ],
+                  "display_fields": [
+                    "games.*.title"
+                  ],
+                  "value_field": "games.*.id"
+                },
+                {
+                  "name": "image",
+                  "label": "Miniatura",
+                  "widget": "image",
+                  "media_library": {
+                    "config": {
+                      "max_file_size": 5242880
+                    }
+                  }
+                },
+                {
+                  "name": "views",
+                  "label": "Visualizaciones",
+                  "widget": "string",
+                  "required": false,
+                  "hint": "Opcional. Se actualiza manualmente."
+                },
+                {
+                  "name": "date",
+                  "label": "Fecha",
+                  "widget": "datetime",
+                  "format": "YYYY-MM-DD",
+                  "date_format": "DD/MM/YYYY",
+                  "time_format": false
+                },
+                {
+                  "name": "duration",
+                  "label": "Duración",
+                  "widget": "string",
+                  "required": false,
+                  "hint": "Ejemplo: 12:48"
+                },
+                {
+                  "name": "url",
+                  "label": "Enlace del video",
+                  "widget": "string",
+                  "required": false,
+                  "hint": "YouTube se reproduce en la página. Otros enlaces HTTPS se abren en la plataforma.",
+                  "pattern": [
+                    "^$|^https://[^\\s]+$",
+                    "Usa una dirección https:// válida."
+                  ]
+                },
+                {
+                  "name": "file",
+                  "label": "O subir un archivo MP4 / WebM",
+                  "widget": "file",
+                  "required": false,
+                  "hint": "Máximo 20 MB. Para videos largos, usa YouTube. Si hay un enlace, tiene prioridad.",
+                  "media_library": {
+                    "config": {
+                      "max_file_size": 20971520
+                    }
+                  },
+                  "pattern": [
+                    "^$|\\.(mp4|webm)$",
+                    "Selecciona un archivo MP4 o WebM."
+                  ]
+                },
+                {
+                  "name": "sample",
+                  "label": "Marcar como contenido de ejemplo",
+                  "widget": "boolean",
+                  "default": false,
+                  "required": false
+                }
+              ]
+            },
+            {
+              "name": "socials",
+              "label": "Redes sociales",
+              "widget": "list",
+              "collapsed": true,
+              "summary": "{{fields.platform}}",
+              "fields": [
+                {
+                  "name": "platform",
+                  "label": "Plataforma",
+                  "widget": "select",
+                  "options": [
+                    "YouTube",
+                    "Twitch",
+                    "TikTok",
+                    "Instagram",
+                    "Discord"
+                  ]
+                },
+                {
+                  "name": "url",
+                  "label": "Enlace oficial",
+                  "widget": "string",
+                  "required": false,
+                  "pattern": [
+                    "^$|^https://[^\\s]+$",
+                    "Usa una dirección https:// válida."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

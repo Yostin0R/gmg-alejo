@@ -1,0 +1,24 @@
+const fs = require('node:fs');
+const vm = require('node:vm');
+const source = fs.readFileSync('dist/app.js', 'utf8');
+const initial = vm.runInNewContext(source.slice(0, source.indexOf("document.querySelector('#game-grid')")) + '\n({artwork,games,videos})');
+const data = {
+  heroImage: 'assets/hero.png', profileImage: 'assets/hero.png',
+  games: initial.games.map(([title,category,id]) => ({id,title,category,image:initial.artwork[id]})),
+  videos: initial.videos.map((v,i) => ({id:'highlight-'+(i+1),title:v.title,game:initial.games.find(g=>g[0]===v.game)[2],image:initial.artwork[v.image],views:v.views,date:['2026-09-12','2026-09-08','2026-09-04'][i],duration:v.length,url:'',file:'',sample:true})),
+  socials: ['YouTube','Twitch','TikTok','Instagram','Discord'].map(platform=>({platform,url:''}))
+};
+fs.writeFileSync('dist/content/site.json', JSON.stringify(data,null,2)+'\n');
+const string = (name,label,extra={})=>({name,label,widget:'string',...extra});
+const img=(name,label)=>({name,label,widget:'image',media_library:{config:{max_file_size:5242880}}});
+const config={backend:{name:'github',repo:'Yostin0R/gmg-alejo',branch:'main',base_url:'https://api.netlify.com',auth_endpoint:'auth'},locale:'es',media_folder:'dist/assets/uploads',public_folder:'/assets/uploads',display_url:'/',logo_url:'/assets/hero.png',editor:{preview:false},collections:[{name:'website',label:'GMG_ALEJO7',files:[{name:'content',label:'Imágenes, juegos y videos',file:'dist/content/site.json',format:'json',fields:[img('heroImage','Imagen de portada'),img('profileImage','Imagen de perfil'),{name:'games',label:'Juegos',label_singular:'Juego',widget:'list',collapsed:true,summary:'{{fields.title}}',fields:[string('id','Identificador',{hint:'Único, sin espacios. No lo cambies si ya tiene videos asociados.',pattern:['^[a-z0-9]+(?:-[a-z0-9]+)*$','Usa minúsculas, números y guiones.']}),string('title','Nombre'),string('category','Categoría'),img('image','Imagen')]},{name:'videos',label:'Videos',label_singular:'Video',widget:'list',collapsed:true,summary:'{{fields.title}}',fields:[string('id','Identificador único',{pattern:['^[a-z0-9]+(?:-[a-z0-9]+)*$','Usa minúsculas, números y guiones.']}),string('title','Título'),{name:'game',label:'Juego',widget:'relation',collection:'website',file:'content',search_fields:['games.*.title'],display_fields:['games.*.title'],value_field:'games.*.id'},img('image','Miniatura'),string('views','Visualizaciones',{required:false,hint:'Opcional. Se actualiza manualmente.'}),{name:'date',label:'Fecha',widget:'datetime',format:'YYYY-MM-DD',date_format:'DD/MM/YYYY',time_format:false},string('duration','Duración',{required:false,hint:'Ejemplo: 12:48'}),string('url','Enlace del video',{required:false,hint:'YouTube se reproduce en la página. Otros enlaces HTTPS se abren en la plataforma.',pattern:['^$|^https://[^\\s]+$','Usa una dirección https:// válida.']}),{name:'file',label:'O subir un archivo MP4 / WebM',widget:'file',required:false,hint:'Máximo 20 MB. Para videos largos, usa YouTube. Si hay un enlace, tiene prioridad.',media_library:{config:{max_file_size:20971520}},pattern:['^$|\\.(mp4|webm)$','Selecciona un archivo MP4 o WebM.']},{name:'sample',label:'Marcar como contenido de ejemplo',widget:'boolean',default:false,required:false}]},{name:'socials',label:'Redes sociales',widget:'list',collapsed:true,summary:'{{fields.platform}}',fields:[{name:'platform',label:'Plataforma',widget:'select',options:['YouTube','Twitch','TikTok','Instagram','Discord']},string('url','Enlace oficial',{required:false,pattern:['^$|^https://[^\\s]+$','Usa una dirección https:// válida.']})]}]}]}]};
+fs.writeFileSync('dist/admin/config.yml',JSON.stringify(config,null,2)+'\n');
+const icons=source.slice(source.indexOf('const icons='),source.indexOf("document.addEventListener('click'"));
+const navigation=source.slice(source.indexOf("for(const id of ['reset-filter'"));
+fs.writeFileSync('dist/app.js',fs.readFileSync('scripts/frontend-prefix.txt','utf8')+'\n'+icons+'\n'+fs.readFileSync('scripts/frontend-events.txt','utf8')+'\n'+navigation);
+let html=fs.readFileSync('dist/index.html','utf8').replace('<script src="app.js"></script>','<script src="content-utils.js"></script><script src="app.js"></script>');
+html=html.replace('<div class="games-grid" id="game-grid"></div>','<p id="content-status" role="status">Loading content…</p><div class="games-grid" id="game-grid"></div>');
+html=html.replace('<span>PREVIEW CONTENT · SAMPLE VIDEOS & STATS</span>','<span id="sample-label">PREVIEW CONTENT · SAMPLE VIDEOS</span>');
+html=html.replace('<p id="dialog-description"></p>','<p id="dialog-description"></p><div id="video-player"></div>');
+html=html.replace('<span>PLAY HARD. STAY REAL.</span></div></footer>','<a href="admin/">Administrar</a></div></footer>');
+fs.writeFileSync('dist/index.html',html);

@@ -1,0 +1,96 @@
+{
+  "heroImage": "assets/hero.png",
+  "profileImage": "assets/hero.png",
+  "games": [
+    {
+      "id": "minecraft",
+      "title": "Minecraft",
+      "category": "OPEN WORLD",
+      "image": "https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Global-Header_Image-Tile_MC-Java-Bedrock_570x321.jpg"
+    },
+    {
+      "id": "fortnite",
+      "title": "Fortnite",
+      "category": "BATTLE ROYALE",
+      "image": "https://cdn2.unrealengine.com/en-fn-og-42-10-c1sx-egs-launcher-blade-2560x1440-2560x1440-319ff81b274e.jpg"
+    },
+    {
+      "id": "valorant",
+      "title": "Valorant",
+      "category": "TACTICAL FPS",
+      "image": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/083baed63d306ee9ba41df4971ac0f6bb0222032-1920x1080.jpg"
+    },
+    {
+      "id": "gta",
+      "title": "GTA V",
+      "category": "ACTION / ADVENTURE",
+      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3240220/header.jpg"
+    },
+    {
+      "id": "fc",
+      "title": "EA Sports FC",
+      "category": "FOOTBALL",
+      "image": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3405690/7bee4fc257ccc11a9496f0c19c553cccfb9fafa9/capsule_616x353_alt_assets_3.jpg"
+    }
+  ],
+  "videos": [
+    {
+      "id": "highlight-1",
+      "title": "One round. Five opponents. No pressure.",
+      "game": "valorant",
+      "image": "https://cmsassets.rgpub.io/sanity/images/dsfx7636/news/083baed63d306ee9ba41df4971ac0f6bb0222032-1920x1080.jpg",
+      "views": "12.8K",
+      "date": "2026-09-12",
+      "duration": "12:48",
+      "url": "",
+      "file": "",
+      "sample": true
+    },
+    {
+      "id": "highlight-2",
+      "title": "Building something bigger. One block at a time.",
+      "game": "minecraft",
+      "image": "https://www.minecraft.net/content/dam/minecraftnet/games/minecraft/key-art/Global-Header_Image-Tile_MC-Java-Bedrock_570x321.jpg",
+      "views": "8.4K",
+      "date": "2026-09-08",
+      "duration": "18:32",
+      "url": "",
+      "file": "",
+      "sample": true
+    },
+    {
+      "id": "highlight-3",
+      "title": "The final circle had other plans…",
+      "game": "fortnite",
+      "image": "https://cdn2.unrealengine.com/en-fn-og-42-10-c1sx-egs-launcher-blade-2560x1440-2560x1440-319ff81b274e.jpg",
+      "views": "16.2K",
+      "date": "2026-09-04",
+      "duration": "10:24",
+      "url": "",
+      "file": "",
+      "sample": true
+    }
+  ],
+  "socials": [
+    {
+      "platform": "YouTube",
+      "url": ""
+    },
+    {
+      "platform": "Twitch",
+      "url": ""
+    },
+    {
+      "platform": "TikTok",
+      "url": ""
+    },
+    {
+      "platform": "Instagram",
+      "url": ""
+    },
+    {
+      "platform": "Discord",
+      "url": ""
+    }
+  ]
+}
